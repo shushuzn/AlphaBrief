@@ -1,0 +1,33 @@
+import subprocess
+import sys
+from pathlib import Path
+
+
+def run_cli(*args: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [sys.executable, "run_agents.py", *args],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+
+def test_cli_outputs_sections(tmp_path: Path):
+    input_file = tmp_path / "report.txt"
+    input_file.write_text("this is a short report", encoding="utf-8")
+
+    result = run_cli("--input", str(input_file))
+
+    assert result.returncode == 0
+    assert "# Research Summary Agent Prompt" in result.stdout
+    assert "# Compliance Guard Checklist" in result.stdout
+
+
+def test_cli_errors_on_empty_input(tmp_path: Path):
+    input_file = tmp_path / "report.txt"
+    input_file.write_text("   ", encoding="utf-8")
+
+    result = run_cli("--input", str(input_file))
+
+    assert result.returncode == 2
+    assert "input report is empty" in result.stderr

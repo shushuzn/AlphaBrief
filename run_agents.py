@@ -1,47 +1,16 @@
 #!/usr/bin/env python3
-"""Execute the local agents configuration workflow for research reports.
-
-This utility operationalizes `agents.md` by:
-1. Applying max-length checks.
-2. Performing optional chunking for long reports.
-3. Emitting ready-to-send prompts for each stage.
-"""
+"""Execute the local agents configuration workflow for research reports."""
 
 from __future__ import annotations
 
 import argparse
-from dataclasses import dataclass
+import sys
 from pathlib import Path
 
+from alphabrief.prompting import build_final_prompt
+from alphabrief.workflow import prepare_workflow
 
 PROMPT_TEMPLATE_PATH = Path("prompts/research_agent.txt")
-
-
-@dataclass
-class WorkflowResult:
-    chunks: list[str]
-    merged_text: str
-
-
-def split_words(text: str, chunk_size: int) -> list[str]:
-    words = text.split()
-    if not words:
-        return []
-    return [" ".join(words[i : i + chunk_size]) for i in range(0, len(words), chunk_size)]
-
-
-def prepare_workflow(report_text: str, max_chars: int, chunk_size_words: int) -> WorkflowResult:
-    if len(report_text) <= max_chars:
-        return WorkflowResult(chunks=[], merged_text=report_text)
-
-    chunks = split_words(report_text, chunk_size_words)
-    merged = "\n\n".join(f"[CHUNK {idx+1}]\n{chunk}" for idx, chunk in enumerate(chunks))
-    return WorkflowResult(chunks=chunks, merged_text=merged)
-
-
-def build_final_prompt(report_text: str) -> str:
-    template = PROMPT_TEMPLATE_PATH.read_text(encoding="utf-8")
-    return template.replace("{{REPORT_CONTENT}}", report_text)
 
 
 def main() -> None:
@@ -51,8 +20,20 @@ def main() -> None:
     parser.add_argument("--chunk-size-words", type=int, default=4000, help="Words per chunk")
     args = parser.parse_args()
 
+    if args.max_chars < 0 or args.chunk_size_words <= 0:
+        print("Error: --max-chars must be >= 0 and --chunk-size-words must be > 0", file=sys.stderr)
+        raise SystemExit(2)
+
     report_path = Path(args.input)
-    report_text = report_path.read_text(encoding="utf-8")
+    try:
+        report_text = report_path.read_text(encoding="utf-8")
+    except OSError as exc:
+        print(f"I/O Error: {exc}", file=sys.stderr)
+        raise SystemExit(3) from exc
+
+    if not report_text.strip():
+        print("Error: input report is empty", file=sys.stderr)
+        raise SystemExit(2)
 
     workflow = prepare_workflow(report_text, args.max_chars, args.chunk_size_words)
 
@@ -61,7 +42,7 @@ def main() -> None:
         print(f"Chunk count: {len(workflow.chunks)}")
         print("Action: summarize each chunk, then merge summaries before final stage.\n")
 
-    final_prompt = build_final_prompt(workflow.merged_text)
+    final_prompt = build_final_prompt(workflow.merged_text, PROMPT_TEMPLATE_PATH)
     print("# Research Summary Agent Prompt\n")
     print(final_prompt)
     print("\n# Compliance Guard Checklist")
