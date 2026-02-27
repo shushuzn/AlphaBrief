@@ -8,8 +8,9 @@
 
 1. 检查输入文本是否超过 `max_chars`（默认 120,000）；
 2. 超长文本按词分块（默认每块 4,000 词）；
-3. 生成可直接提交给 Research Summary Agent 的最终 Prompt；
-4. 输出 Compliance Guard 检查清单。
+3. 对每个分块生成中间摘要并合并；
+4. 生成可直接提交给 Research Summary Agent 的最终 Prompt；
+5. 输出 Compliance Guard 检查清单。
 
 实现模块位于 `alphabrief/`：
 - `alphabrief/chunking.py`
@@ -26,11 +27,12 @@ python3 run_agents.py --input /path/to/report.txt
 
 - `--max-chars`：触发分块的最大字符数（默认 `120000`）
 - `--chunk-size-words`：每块词数（默认 `4000`）
+- `--summary-max-words`：每个 chunk 中间摘要保留词数上限（默认 `400`）
 
 ### 示例
 
 ```bash
-python3 run_agents.py --input sample_report.txt --max-chars 50000 --chunk-size-words 3000
+python3 run_agents.py --input sample_report.txt --max-chars 50000 --chunk-size-words 3000 --summary-max-words 300
 ```
 
 ### 测试

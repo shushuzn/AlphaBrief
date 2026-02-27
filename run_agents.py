@@ -18,10 +18,19 @@ def main() -> None:
     parser.add_argument("--input", required=True, help="Path to extracted report text file")
     parser.add_argument("--max-chars", type=int, default=120000, help="Max report chars before chunking")
     parser.add_argument("--chunk-size-words", type=int, default=4000, help="Words per chunk")
+    parser.add_argument(
+        "--summary-max-words",
+        type=int,
+        default=400,
+        help="Maximum words kept in each intermediate chunk summary",
+    )
     args = parser.parse_args()
 
-    if args.max_chars < 0 or args.chunk_size_words <= 0:
-        print("Error: --max-chars must be >= 0 and --chunk-size-words must be > 0", file=sys.stderr)
+    if args.max_chars < 0 or args.chunk_size_words <= 0 or args.summary_max_words <= 0:
+        print(
+            "Error: --max-chars must be >= 0, --chunk-size-words and --summary-max-words must be > 0",
+            file=sys.stderr,
+        )
         raise SystemExit(2)
 
     report_path = Path(args.input)
@@ -35,12 +44,18 @@ def main() -> None:
         print("Error: input report is empty", file=sys.stderr)
         raise SystemExit(2)
 
-    workflow = prepare_workflow(report_text, args.max_chars, args.chunk_size_words)
+    workflow = prepare_workflow(
+        report_text,
+        max_chars=args.max_chars,
+        chunk_size_words=args.chunk_size_words,
+        summary_max_words=args.summary_max_words,
+    )
 
     if workflow.chunks:
         print("# Chunking Agent Output")
         print(f"Chunk count: {len(workflow.chunks)}")
-        print("Action: summarize each chunk, then merge summaries before final stage.\n")
+        print(f"Chunk summaries generated: {len(workflow.chunk_summaries)}")
+        print("Action: merged chunk summaries are forwarded to final stage.\n")
 
     final_prompt = build_final_prompt(workflow.merged_text, PROMPT_TEMPLATE_PATH)
     print("# Research Summary Agent Prompt\n")

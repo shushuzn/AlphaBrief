@@ -3,9 +3,9 @@
 ## Scope
 - [x] Add reusable chunking module for long report handling.
 - [x] Integrate chunking workflow into CLI execution path.
-- [x] Add automated tests for chunking boundaries and prompt rendering.
-- [x] Add CLI integration tests for success/error flows.
-- [ ] Implement chunk-summary merge with model calls (deferred, needs model integration).
+- [x] Add deterministic chunk-summary stage before final prompt merge.
+- [x] Add automated tests for chunking boundaries, intermediate summaries, and prompt rendering.
+- [x] Add CLI integration tests for success/error flows and chunk-summary output.
 
 ## Out of Scope (Per agents.md)
 - Export/history features (M2)

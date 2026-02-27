@@ -23,6 +23,26 @@ def test_cli_outputs_sections(tmp_path: Path):
     assert "# Compliance Guard Checklist" in result.stdout
 
 
+def test_cli_shows_chunk_summary_stage(tmp_path: Path):
+    input_file = tmp_path / "report.txt"
+    input_file.write_text("one two three four five six", encoding="utf-8")
+
+    result = run_cli(
+        "--input",
+        str(input_file),
+        "--max-chars",
+        "1",
+        "--chunk-size-words",
+        "2",
+        "--summary-max-words",
+        "1",
+    )
+
+    assert result.returncode == 0
+    assert "Chunk summaries generated" in result.stdout
+    assert "[CHUNK SUMMARY 1]" in result.stdout
+
+
 def test_cli_errors_on_empty_input(tmp_path: Path):
     input_file = tmp_path / "report.txt"
     input_file.write_text("   ", encoding="utf-8")
