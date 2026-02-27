@@ -43,7 +43,9 @@ def test_cli_shows_chunk_summary_stage(tmp_path: Path):
 
     assert result.returncode == 0
     assert "Chunk summaries generated" in result.stdout
-    assert "[CHUNK SUMMARY 1]" in result.stdout
+    assert "Compression rounds:" in result.stdout
+    assert "Truncated to max chars:" in result.stdout
+    assert "# Chunking Agent Output" in result.stdout
 
 
 def test_cli_errors_on_empty_input(tmp_path: Path):

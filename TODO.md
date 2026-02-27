@@ -1,10 +1,10 @@
 # TODO (Current Milestone: M1 Long Report Stability)
 
 ## Scope
-- [x] 加强 `agents.md` 与程序运行时的联系：CLI 自动读取并展示当前里程碑与 gates。
-- [x] 增加 `--agents-spec` 参数，支持显式指定规范文件路径。
-- [x] 补充测试覆盖 `agents.md` 解析与缺失规范文件错误路径。
-- [x] 更新 README 教程说明运行时规范上下文输出。
+- [x] 优化核心流程：对 chunk summary 合并结果增加长度守护，避免二次超限。
+- [x] 增强无空格文本摘要逻辑：在 no-whitespace 场景下回退到字符级摘要压缩。
+- [x] 在 CLI 输出中增加压缩轮次与是否截断指标，提升可观测性。
+- [x] 补充 workflow 与 CLI 测试覆盖压缩/截断路径。
 
 ## Out of Scope (Per agents.md)
 - Export/history features (M2)

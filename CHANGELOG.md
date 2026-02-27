@@ -1,11 +1,11 @@
 # Changelog
 
-## [0.1.7] - 2026-02-27
+## [0.1.8] - 2026-02-27
 ### Added
-- Added `alphabrief/agents_spec.py` to parse milestone and gate context from `agents.md`.
-- Added CLI option `--agents-spec` to bind runtime behavior to a specific agent spec file.
-- Added tests for agent spec parsing and missing `--agents-spec` error handling.
+- Added iterative post-chunk compression in workflow so merged chunk summaries respect `max_chars`.
+- Added last-resort truncation guard with `[TRUNCATED TO MAX_CHARS]` marker for extreme edge cases.
+- Added observability in CLI output: `Compression rounds` and `Truncated to max chars`.
 
 ### Changed
-- `run_agents.py` now prints `# Agents Spec Context` (source, current milestone, active gates) before workflow output.
-- Updated README tutorial to document the new spec-context output and argument.
+- Improved `summarize_chunk` for no-whitespace text to apply character-level compression fallback.
+- Expanded workflow/CLI tests to cover compression and truncation paths.

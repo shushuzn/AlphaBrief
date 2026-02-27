@@ -84,6 +84,8 @@ def main() -> None:
         print("# Chunking Agent Output")
         print(f"Chunk count: {len(workflow.chunks)}")
         print(f"Chunk summaries generated: {len(workflow.chunk_summaries)}")
+        print(f"Compression rounds: {workflow.compression_rounds}")
+        print(f"Truncated to max chars: {workflow.was_truncated}")
         print("Action: merged chunk summaries are forwarded to final stage.\n")
 
     try:

@@ -30,18 +30,25 @@ def split_words(text: str, chunk_size: int) -> list[str]:
 def summarize_chunk(chunk_text: str, summary_max_words: int) -> str:
     """Create a compact intermediate summary from a chunk.
 
-    This is a deterministic fallback summarizer used in M1 to prevent
-    oversized prompts before model-level chunk summarization is introduced.
+    For whitespace-based text, summary_max_words is word-based.
+    For no-whitespace chunks (e.g., CJK/OCR), it degrades gracefully to
+    a character-based cap.
     """
     if summary_max_words <= 0:
         raise ValueError("summary_max_words must be positive")
 
-    words = chunk_text.split()
-    if not words:
+    normalized = chunk_text.strip()
+    if not normalized:
         return ""
 
+    words = normalized.split()
+
+    # No-whitespace fallback: apply char-level cap.
+    if len(words) == 1 and len(normalized) == len(words[0]) and len(normalized) > summary_max_words:
+        return f"{normalized[:summary_max_words]} ..."
+
     if len(words) <= summary_max_words:
-        return chunk_text
+        return normalized
 
     kept = " ".join(words[:summary_max_words])
     return f"{kept} ..."

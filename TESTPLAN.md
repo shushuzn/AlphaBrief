@@ -1,14 +1,16 @@
 # TESTPLAN (M1)
 
 ## Definition of Done
-- CLI 执行时会读取 `agents.md` 并输出当前里程碑与 gate 信息。
-- 缺失 `agents.md`（或自定义 `--agents-spec` 文件）时返回 I/O 错误退出码 `3`。
-- 现有 workflow/CLI 测试保持通过。
+- 长文本分块后合并摘要文本可稳定落入 `max_chars` 限制。
+- 无空格文本在摘要阶段可执行字符级压缩。
+- CLI 可展示 `Compression rounds` 与 `Truncated to max chars`。
+- 自动化测试全量通过。
 
 ## Acceptance Tests
-- **T1**: CLI 输出包含 `# Agents Spec Context`、`Current milestone`、`Active gates`。
-- **T2**: `--agents-spec` 指向不存在文件时返回 exit code `3`。
-- **T3**: `pytest -q` 全量通过。
+- **T1**: `prepare_workflow` 在极端长文本下会压缩或截断并满足长度上限。
+- **T2**: `summarize_chunk` 在 no-whitespace 文本下按字符上限压缩。
+- **T3**: CLI 在 chunking 路径输出压缩轮次与截断标识。
+- **T4**: `pytest -q` 全量通过。
 
 ## Command
 - `pytest -q`
