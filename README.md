@@ -73,11 +73,11 @@ python3 run_agents.py \
 ```bash
 python3 run_agents.py \
   --input sample_report.txt \
-  --agents-spec agents.md
+  --agents-spec SKILL.md
 ```
 
 说明：
-- `--agents-spec` 用于指定运行时读取的 Agent 规范文件；
+- `--agents-spec` 用于指定运行时读取的 Agent 规范/skill 文件（默认 `SKILL.md`，若缺失回退 `agents.md`）；
 - 程序会输出当前里程碑与 gate，用于将执行行为与规范对齐。
 
 ### 场景 B：替换提示词模板

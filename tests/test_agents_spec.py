@@ -25,3 +25,11 @@ workflow:
     assert spec.milestones[0].milestone_id == "M1"
     assert spec.current_milestone() is not None
     assert spec.gates == ["All acceptance tests pass"]
+
+
+def test_load_agents_spec_from_repo_skill_file():
+    spec = load_agents_spec(Path("SKILL.md"))
+    current = spec.current_milestone()
+    assert current is not None
+    assert current.milestone_id == "M1"
+    assert len(spec.gates) >= 1

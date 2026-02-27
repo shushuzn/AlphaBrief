@@ -12,7 +12,7 @@ from alphabrief.prompting import build_final_prompt
 from alphabrief.workflow import prepare_workflow
 
 DEFAULT_PROMPT_TEMPLATE_PATH = Path("prompts/research_agent.txt")
-DEFAULT_AGENTS_SPEC_PATH = Path("agents.md")
+DEFAULT_AGENTS_SPEC_PATH = Path("SKILL.md")
 
 
 def main() -> None:
@@ -34,7 +34,7 @@ def main() -> None:
     parser.add_argument(
         "--agents-spec",
         default=str(DEFAULT_AGENTS_SPEC_PATH),
-        help="Agent execution spec path (default: agents.md)",
+        help="Agent execution spec path (default: SKILL.md, fallback: agents.md)",
     )
     args = parser.parse_args()
 
@@ -45,11 +45,23 @@ def main() -> None:
         )
         raise SystemExit(2)
 
-    try:
-        agents_spec = load_agents_spec(Path(args.agents_spec))
-    except (OSError, UnicodeDecodeError) as exc:
-        print(f"I/O Error: {exc}", file=sys.stderr)
-        raise SystemExit(3) from exc
+    requested_spec = Path(args.agents_spec)
+    spec_candidates = [requested_spec]
+    if requested_spec == DEFAULT_AGENTS_SPEC_PATH:
+        spec_candidates.append(Path("agents.md"))
+
+    agents_spec = None
+    last_exc: Exception | None = None
+    for candidate in spec_candidates:
+        try:
+            agents_spec = load_agents_spec(candidate)
+            break
+        except (OSError, UnicodeDecodeError) as exc:
+            last_exc = exc
+
+    if agents_spec is None:
+        print(f"I/O Error: {last_exc}", file=sys.stderr)
+        raise SystemExit(3)
 
     report_path = Path(args.input)
     try:

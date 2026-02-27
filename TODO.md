@@ -1,10 +1,10 @@
 # TODO (Current Milestone: M1 Long Report Stability)
 
 ## Scope
-- [x] 优化核心流程：对 chunk summary 合并结果增加长度守护，避免二次超限。
-- [x] 增强无空格文本摘要逻辑：在 no-whitespace 场景下回退到字符级摘要压缩。
-- [x] 在 CLI 输出中增加压缩轮次与是否截断指标，提升可观测性。
-- [x] 补充 workflow 与 CLI 测试覆盖压缩/截断路径。
+- [x] 将 `agents.md` 以 skill 形态落地：新增 `SKILL.md` 作为默认可加载规范入口。
+- [x] 程序默认读取 `SKILL.md`，并在缺失时自动回退 `agents.md`。
+- [x] 增加测试覆盖 `SKILL.md` 解析。
+- [x] 更新教程与发布工件，说明 spec/skill 读取策略。
 
 ## Out of Scope (Per agents.md)
 - Export/history features (M2)

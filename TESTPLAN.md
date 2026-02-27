@@ -1,16 +1,15 @@
 # TESTPLAN (M1)
 
 ## Definition of Done
-- 长文本分块后合并摘要文本可稳定落入 `max_chars` 限制。
-- 无空格文本在摘要阶段可执行字符级压缩。
-- CLI 可展示 `Compression rounds` 与 `Truncated to max chars`。
-- 自动化测试全量通过。
+- CLI 默认按 skill 文件 (`SKILL.md`) 读取执行规范。
+- 当默认 skill 文件缺失时，可回退到 `agents.md`。
+- `load_agents_spec` 可直接解析仓库 `SKILL.md`。
+- 全量自动化测试通过。
 
 ## Acceptance Tests
-- **T1**: `prepare_workflow` 在极端长文本下会压缩或截断并满足长度上限。
-- **T2**: `summarize_chunk` 在 no-whitespace 文本下按字符上限压缩。
-- **T3**: CLI 在 chunking 路径输出压缩轮次与截断标识。
-- **T4**: `pytest -q` 全量通过。
+- **T1**: `tests/test_agents_spec.py` 可成功解析 `SKILL.md` 并识别当前里程碑。
+- **T2**: CLI 仍可输出 `Agents Spec Context` 与 gate 信息。
+- **T3**: `pytest -q` 全量通过。
 
 ## Command
 - `pytest -q`
