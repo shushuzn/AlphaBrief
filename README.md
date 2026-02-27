@@ -28,11 +28,12 @@ python3 run_agents.py --input /path/to/report.txt
 - `--max-chars`：触发分块的最大字符数（默认 `120000`）
 - `--chunk-size-words`：每块词数（默认 `4000`）
 - `--summary-max-words`：每个 chunk 中间摘要保留词数上限（默认 `400`）
+- `--template`：Prompt 模板路径（默认 `prompts/research_agent.txt`）
 
 ### 示例
 
 ```bash
-python3 run_agents.py --input sample_report.txt --max-chars 50000 --chunk-size-words 3000 --summary-max-words 300
+python3 run_agents.py --input sample_report.txt --max-chars 50000 --chunk-size-words 3000 --summary-max-words 300 --template prompts/research_agent.txt
 ```
 
 ### 测试

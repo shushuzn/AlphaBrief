@@ -10,7 +10,7 @@ from pathlib import Path
 from alphabrief.prompting import build_final_prompt
 from alphabrief.workflow import prepare_workflow
 
-PROMPT_TEMPLATE_PATH = Path("prompts/research_agent.txt")
+DEFAULT_PROMPT_TEMPLATE_PATH = Path("prompts/research_agent.txt")
 
 
 def main() -> None:
@@ -24,6 +24,11 @@ def main() -> None:
         default=400,
         help="Maximum words kept in each intermediate chunk summary",
     )
+    parser.add_argument(
+        "--template",
+        default=str(DEFAULT_PROMPT_TEMPLATE_PATH),
+        help="Prompt template path (default: prompts/research_agent.txt)",
+    )
     args = parser.parse_args()
 
     if args.max_chars < 0 or args.chunk_size_words <= 0 or args.summary_max_words <= 0:
@@ -36,7 +41,7 @@ def main() -> None:
     report_path = Path(args.input)
     try:
         report_text = report_path.read_text(encoding="utf-8")
-    except OSError as exc:
+    except (OSError, UnicodeDecodeError) as exc:
         print(f"I/O Error: {exc}", file=sys.stderr)
         raise SystemExit(3) from exc
 
@@ -57,7 +62,12 @@ def main() -> None:
         print(f"Chunk summaries generated: {len(workflow.chunk_summaries)}")
         print("Action: merged chunk summaries are forwarded to final stage.\n")
 
-    final_prompt = build_final_prompt(workflow.merged_text, PROMPT_TEMPLATE_PATH)
+    try:
+        final_prompt = build_final_prompt(workflow.merged_text, Path(args.template))
+    except (OSError, UnicodeDecodeError) as exc:
+        print(f"I/O Error: {exc}", file=sys.stderr)
+        raise SystemExit(3) from exc
+
     print("# Research Summary Agent Prompt\n")
     print(final_prompt)
     print("\n# Compliance Guard Checklist")

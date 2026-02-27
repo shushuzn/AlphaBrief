@@ -1,11 +1,10 @@
 # Changelog
 
-## [0.1.2] - 2026-02-27
+## [0.1.3] - 2026-02-27
 ### Added
-- Added intermediate chunk-summary generation (`summarize_chunk`) to create a closed chunking pipeline for long reports.
-- Added CLI option `--summary-max-words` to control summary compression per chunk.
-- Expanded tests to cover chunk-summary behavior and long-input CLI flow.
+- Added `--template` CLI option to allow custom prompt template paths.
+- Added CLI tests for invalid arguments, missing input file, and missing template file.
 
 ### Changed
-- Updated workflow orchestration to merge chunk summaries (instead of raw chunks) into final prompt input.
-- Updated milestone artifacts and docs to reflect chunk-summary merge stage.
+- Unified CLI I/O error handling to consistently return exit code `3` for input/template read failures.
+- Kept M1 long-report chunk-summary merge flow while hardening error-path behavior.
