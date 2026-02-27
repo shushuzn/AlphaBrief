@@ -9,7 +9,8 @@
 1. 准备一份研报纯文本；
 2. 运行 `run_agents.py` 执行分块与中间摘要；
 3. 获取可直接投喂给 Research Summary Agent 的最终 Prompt；
-4. 使用输出末尾的 Compliance Guard 清单做合规复核。
+4. 自动读取 `agents.md` 显示当前里程碑与 gate；
+5. 使用输出末尾的 Compliance Guard 清单做合规复核。
 
 ---
 
@@ -67,6 +68,18 @@ python3 run_agents.py \
 - `--chunk-size-words`：每个 chunk 的词数；
 - `--summary-max-words`：每个 chunk 中间摘要保留词数上限。
 
+### 场景 C：指定 agent 规范文件
+
+```bash
+python3 run_agents.py \
+  --input sample_report.txt \
+  --agents-spec agents.md
+```
+
+说明：
+- `--agents-spec` 用于指定运行时读取的 Agent 规范文件；
+- 程序会输出当前里程碑与 gate，用于将执行行为与规范对齐。
+
 ### 场景 B：替换提示词模板
 
 ```bash
@@ -83,7 +96,16 @@ python3 run_agents.py \
 
 ## 四、输出解读教程
 
-当输入超出阈值时，输出会出现：
+程序启动后会先输出：
+
+- `# Agents Spec Context`
+  - `Source`
+  - `Current milestone`
+  - `Active gates`
+
+用于把运行时行为和 `agents.md` 规范直接关联。
+
+当输入超出阈值时，还会出现：
 
 - `# Chunking Agent Output`
   - `Chunk count`

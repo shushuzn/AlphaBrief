@@ -3,9 +3,9 @@
 ## Latest Run
 - Command: `pytest -q`
 - Result: **PASS**
-- Summary: `14 passed in 0.61s`
+- Summary: `16 passed in 0.79s`
 
 ## Coverage Against M1 Acceptance Tests
-- T1: ✅ Covered by `test_split_words_falls_back_to_char_chunks_when_no_whitespace`.
-- T2: ✅ Covered by `test_prepare_workflow_chunking_handles_non_whitespace_text`.
+- T1: ✅ Covered by `test_cli_outputs_sections` (`# Agents Spec Context`, `Current milestone`, `Active gates`).
+- T2: ✅ Covered by `test_cli_errors_on_missing_agents_spec`.
 - T3: ✅ `pytest -q` 全量通过。

@@ -19,6 +19,9 @@ def test_cli_outputs_sections(tmp_path: Path):
     result = run_cli("--input", str(input_file))
 
     assert result.returncode == 0
+    assert "# Agents Spec Context" in result.stdout
+    assert "Current milestone:" in result.stdout
+    assert "Active gates:" in result.stdout
     assert "# Research Summary Agent Prompt" in result.stdout
     assert "# Compliance Guard Checklist" in result.stdout
 
@@ -78,6 +81,16 @@ def test_cli_errors_on_missing_template(tmp_path: Path):
     missing_template = tmp_path / "missing_template.txt"
 
     result = run_cli("--input", str(input_file), "--template", str(missing_template))
+
+    assert result.returncode == 3
+    assert "I/O Error" in result.stderr
+
+
+def test_cli_errors_on_missing_agents_spec(tmp_path: Path):
+    input_file = tmp_path / "report.txt"
+    input_file.write_text("this is a short report", encoding="utf-8")
+
+    result = run_cli("--input", str(input_file), "--agents-spec", str(tmp_path / "missing_agents.md"))
 
     assert result.returncode == 3
     assert "I/O Error" in result.stderr

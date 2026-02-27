@@ -7,10 +7,12 @@ import argparse
 import sys
 from pathlib import Path
 
+from alphabrief.agents_spec import load_agents_spec
 from alphabrief.prompting import build_final_prompt
 from alphabrief.workflow import prepare_workflow
 
 DEFAULT_PROMPT_TEMPLATE_PATH = Path("prompts/research_agent.txt")
+DEFAULT_AGENTS_SPEC_PATH = Path("agents.md")
 
 
 def main() -> None:
@@ -29,6 +31,11 @@ def main() -> None:
         default=str(DEFAULT_PROMPT_TEMPLATE_PATH),
         help="Prompt template path (default: prompts/research_agent.txt)",
     )
+    parser.add_argument(
+        "--agents-spec",
+        default=str(DEFAULT_AGENTS_SPEC_PATH),
+        help="Agent execution spec path (default: agents.md)",
+    )
     args = parser.parse_args()
 
     if args.max_chars < 0 or args.chunk_size_words <= 0 or args.summary_max_words <= 0:
@@ -37,6 +44,12 @@ def main() -> None:
             file=sys.stderr,
         )
         raise SystemExit(2)
+
+    try:
+        agents_spec = load_agents_spec(Path(args.agents_spec))
+    except (OSError, UnicodeDecodeError) as exc:
+        print(f"I/O Error: {exc}", file=sys.stderr)
+        raise SystemExit(3) from exc
 
     report_path = Path(args.input)
     try:
@@ -55,6 +68,17 @@ def main() -> None:
         chunk_size_words=args.chunk_size_words,
         summary_max_words=args.summary_max_words,
     )
+
+    print("# Agents Spec Context")
+    print(f"Source: {agents_spec.source}")
+    current = agents_spec.current_milestone()
+    if current is not None:
+        print(f"Current milestone: {current.milestone_id} ({current.name}) [{current.status}]")
+    if agents_spec.gates:
+        print("Active gates:")
+        for rule in agents_spec.gates:
+            print(f"- {rule}")
+    print()
 
     if workflow.chunks:
         print("# Chunking Agent Output")

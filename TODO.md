@@ -1,10 +1,10 @@
 # TODO (Current Milestone: M1 Long Report Stability)
 
 ## Scope
-- [x] 执行 `agents.md` 迭代闭环（Plan/Build/Test/Release）。
-- [x] 优化分块鲁棒性：无空格长文本（如 OCR/CJK）回退为按字符分块。
-- [x] 补充单元测试覆盖无空格文本分块与 workflow 集成场景。
-- [x] 更新 README 教程中的对应说明。
+- [x] 加强 `agents.md` 与程序运行时的联系：CLI 自动读取并展示当前里程碑与 gates。
+- [x] 增加 `--agents-spec` 参数，支持显式指定规范文件路径。
+- [x] 补充测试覆盖 `agents.md` 解析与缺失规范文件错误路径。
+- [x] 更新 README 教程说明运行时规范上下文输出。
 
 ## Out of Scope (Per agents.md)
 - Export/history features (M2)
