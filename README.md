@@ -1,43 +1,129 @@
 # AlphaBrief
 
-轻量级研报摘要工作流仓库。
+轻量级研报摘要工作流仓库（面向“研报文本 → 结构化总结 Prompt”）。
 
-## 执行 agents.md
+## 教程目标
 
-仓库提供了 `run_agents.py` 用于把 `agents.md` 里的流程落地执行：
+本教程帮助你在 5 分钟内完成：
 
-1. 检查输入文本是否超过 `max_chars`（默认 120,000）；
-2. 超长文本按词分块（默认每块 4,000 词）；
-3. 对每个分块生成中间摘要并合并；
-4. 生成可直接提交给 Research Summary Agent 的最终 Prompt；
-5. 输出 Compliance Guard 检查清单。
+1. 准备一份研报纯文本；
+2. 运行 `run_agents.py` 执行分块与中间摘要；
+3. 获取可直接投喂给 Research Summary Agent 的最终 Prompt；
+4. 使用输出末尾的 Compliance Guard 清单做合规复核。
 
-实现模块位于 `alphabrief/`：
-- `alphabrief/chunking.py`
-- `alphabrief/workflow.py`
-- `alphabrief/prompting.py`
+---
 
-### 使用方式
+## 一、环境准备
+
+### 1) 进入仓库
 
 ```bash
-python3 run_agents.py --input /path/to/report.txt
+cd /workspace/AlphaBrief
 ```
 
-可选参数：
-
-- `--max-chars`：触发分块的最大字符数（默认 `120000`）
-- `--chunk-size-words`：每块词数（默认 `4000`）
-- `--summary-max-words`：每个 chunk 中间摘要保留词数上限（默认 `400`）
-- `--template`：Prompt 模板路径（默认 `prompts/research_agent.txt`）
-
-### 示例
+### 2) 检查 Python
 
 ```bash
-python3 run_agents.py --input sample_report.txt --max-chars 50000 --chunk-size-words 3000 --summary-max-words 300 --template prompts/research_agent.txt
+python3 --version
 ```
 
-### 测试
+建议 Python 3.10+。
+
+---
+
+## 二、最短可用路径（Quick Start）
+
+### 第 1 步：准备输入文本
+
+将研报内容保存为纯文本文件，例如：`sample_report.txt`。
+
+### 第 2 步：运行默认命令
+
+```bash
+python3 run_agents.py --input sample_report.txt
+```
+
+你将得到两段核心输出：
+
+- `# Research Summary Agent Prompt`：可直接给总结模型；
+- `# Compliance Guard Checklist`：上线前合规检查项。
+
+---
+
+## 三、参数教程（按场景选）
+
+### 场景 A：报告超长，容易超上下文
+
+```bash
+python3 run_agents.py \
+  --input sample_report.txt \
+  --max-chars 50000 \
+  --chunk-size-words 3000 \
+  --summary-max-words 300
+```
+
+说明：
+- `--max-chars`：超过该字符数才触发分块；
+- `--chunk-size-words`：每个 chunk 的词数；
+- `--summary-max-words`：每个 chunk 中间摘要保留词数上限。
+
+### 场景 B：替换提示词模板
+
+```bash
+python3 run_agents.py \
+  --input sample_report.txt \
+  --template prompts/research_agent.txt
+```
+
+说明：
+- `--template` 用于指定自定义模板路径；
+- 模板中必须包含 `{{REPORT_CONTENT}}` 占位符。
+
+---
+
+## 四、输出解读教程
+
+当输入超出阈值时，输出会出现：
+
+- `# Chunking Agent Output`
+  - `Chunk count`
+  - `Chunk summaries generated`
+
+这表示流程已进入“分块 → 分块摘要 → 合并摘要 → 最终 Prompt”闭环。
+
+---
+
+## 五、常见问题（Troubleshooting）
+
+### 1) 退出码 `2`
+
+通常是参数或输入内容问题：
+- `--summary-max-words`、`--chunk-size-words` 非正数；
+- `--max-chars` 为负数；
+- 输入文件为空文本。
+
+### 2) 退出码 `3`
+
+通常是 I/O 问题：
+- 输入文件不存在/不可读；
+- 模板文件不存在/不可读；
+- 文件编码无法按 UTF-8 读取。
+
+---
+
+## 六、模块结构（便于二次开发）
+
+- `alphabrief/chunking.py`：分块与分块摘要
+- `alphabrief/workflow.py`：阈值判断、分块编排、摘要合并
+- `alphabrief/prompting.py`：模板渲染
+- `run_agents.py`：CLI 入口
+
+---
+
+## 七、验证命令
 
 ```bash
 pytest -q
 ```
+
+如测试通过，可按当前输出进入下游总结/合规流程。

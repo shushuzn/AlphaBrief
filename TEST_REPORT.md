@@ -3,10 +3,10 @@
 ## Latest Run
 - Command: `pytest -q`
 - Result: **PASS**
-- Summary: `12 passed`
+- Summary: `12 passed in 0.62s`
 
 ## Coverage Against M1 Acceptance Tests
-- T1: ✅ Covered by `test_prepare_workflow_chunking_generates_summaries_when_over_threshold` and `test_cli_shows_chunk_summary_stage`.
-- T2: ✅ Covered by `test_cli_outputs_sections`.
-- T3: ✅ Covered by `test_cli_errors_on_empty_input` and `test_cli_errors_on_invalid_args`.
-- T4: ✅ Covered by `test_cli_errors_on_missing_input_file` and `test_cli_errors_on_missing_template`.
+- T1: ✅ README 包含 Quick Start 与分步执行说明。
+- T2: ✅ README 覆盖关键参数及场景示例。
+- T3: ✅ README 明确退出码 `2` / `3` 的常见原因。
+- T4: ✅ `pytest -q` 通过。
