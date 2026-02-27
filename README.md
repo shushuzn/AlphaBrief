@@ -9,8 +9,9 @@
 1. 准备一份研报纯文本；
 2. 运行 `run_agents.py` 执行分块与中间摘要；
 3. 获取可直接投喂给 Research Summary Agent 的最终 Prompt；
-4. 自动读取 `agents.md` 显示当前里程碑与 gate；
-5. 使用输出末尾的 Compliance Guard 清单做合规复核。
+4. 自动读取 `SKILL.md`（缺失回退 `agents.md`）并显示当前里程碑与 gate；
+5. 在 spec 不完整时直接报错，阻止非规范执行；
+6. 使用输出末尾的 Compliance Guard 清单做合规复核。
 
 ---
 
@@ -103,7 +104,8 @@ python3 run_agents.py \
   - `Current milestone`
   - `Active gates`
 
-用于把运行时行为和 `agents.md` 规范直接关联。
+用于把运行时行为和 `SKILL.md/agents.md` 规范直接关联。
+若规范缺少 milestones/gates/iteration steps/repo_artifacts，CLI 会以退出码 `2` 失败。
 
 当输入超出阈值时，还会出现：
 

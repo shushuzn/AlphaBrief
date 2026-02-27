@@ -63,6 +63,11 @@ def main() -> None:
         print(f"I/O Error: {last_exc}", file=sys.stderr)
         raise SystemExit(3)
 
+    spec_issues = agents_spec.validate()
+    if spec_issues:
+        print(f"Error: invalid agents spec ({'; '.join(spec_issues)})", file=sys.stderr)
+        raise SystemExit(2)
+
     report_path = Path(args.input)
     try:
         report_text = report_path.read_text(encoding="utf-8")
@@ -82,6 +87,7 @@ def main() -> None:
     )
 
     print("# Agents Spec Context")
+    print("Mode: skill-driven execution")
     print(f"Source: {agents_spec.source}")
     current = agents_spec.current_milestone()
     if current is not None:
@@ -90,6 +96,8 @@ def main() -> None:
         print("Active gates:")
         for rule in agents_spec.gates:
             print(f"- {rule}")
+    if agents_spec.iteration_steps:
+        print(f"Iteration loop: {' -> '.join(agents_spec.iteration_steps)}")
     print()
 
     if workflow.chunks:

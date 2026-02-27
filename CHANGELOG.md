@@ -1,10 +1,11 @@
 # Changelog
 
-## [0.1.9] - 2026-02-27
+## [0.1.10] - 2026-02-27
 ### Added
-- Added `SKILL.md` to expose `agents.md` governance as a runtime-loadable skill entry.
-- Added test coverage for parsing repository-level `SKILL.md`.
+- Added spec validation (`milestones`, `gates`, `iteration steps`, `repo_artifacts`) in `alphabrief.agents_spec.AgentsSpec.validate`.
+- Added CLI test coverage for invalid spec files that must fail fast.
 
 ### Changed
-- CLI default spec source switched to `SKILL.md` with fallback to `agents.md` for compatibility.
-- Updated README to document skill-first spec loading behavior.
+- Strengthened skill execution behavior: `run_agents.py` now validates loaded `SKILL.md/agents.md` before processing input.
+- CLI context now includes explicit `Mode: skill-driven execution` and iteration loop reporting.
+- Updated README for skill-first loading and spec-validation failure semantics.

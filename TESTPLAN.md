@@ -1,15 +1,16 @@
 # TESTPLAN (M1)
 
 ## Definition of Done
-- CLI 默认按 skill 文件 (`SKILL.md`) 读取执行规范。
-- 当默认 skill 文件缺失时，可回退到 `agents.md`。
-- `load_agents_spec` 可直接解析仓库 `SKILL.md`。
-- 全量自动化测试通过。
+- 程序默认读取 `SKILL.md` 并可回退 `agents.md`。
+- 规范文件缺失关键段落时，CLI 必须失败而非继续执行。
+- CLI 正常路径仍输出当前里程碑、gates、iteration loop。
+- 全量测试通过。
 
 ## Acceptance Tests
-- **T1**: `tests/test_agents_spec.py` 可成功解析 `SKILL.md` 并识别当前里程碑。
-- **T2**: CLI 仍可输出 `Agents Spec Context` 与 gate 信息。
-- **T3**: `pytest -q` 全量通过。
+- **T1**: `load_agents_spec(...).validate()` 对完整 spec 返回空问题列表。
+- **T2**: 无效 spec 触发 `invalid agents spec` 并返回 exit code `2`。
+- **T3**: CLI 输出包含 `Mode: skill-driven execution` 与 `Iteration loop`。
+- **T4**: `pytest -q` 全量通过。
 
 ## Command
 - `pytest -q`

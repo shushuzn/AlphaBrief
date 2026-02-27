@@ -1,10 +1,10 @@
 # TODO (Current Milestone: M1 Long Report Stability)
 
 ## Scope
-- [x] 将 `agents.md` 以 skill 形态落地：新增 `SKILL.md` 作为默认可加载规范入口。
-- [x] 程序默认读取 `SKILL.md`，并在缺失时自动回退 `agents.md`。
-- [x] 增加测试覆盖 `SKILL.md` 解析。
-- [x] 更新教程与发布工件，说明 spec/skill 读取策略。
+- [x] 执行 `SKILL.md`：将 skill 作为程序默认规范来源并保留 `agents.md` 回退。
+- [x] 增强规范执行强度：在运行前校验 milestones/gates/iteration steps/repo_artifacts。
+- [x] 增加无效 spec 失败路径测试，防止“带病规范”继续执行。
+- [x] 更新教程与工件，明确 skill-first + spec validation 行为。
 
 ## Out of Scope (Per agents.md)
 - Export/history features (M2)

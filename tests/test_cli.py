@@ -20,8 +20,10 @@ def test_cli_outputs_sections(tmp_path: Path):
 
     assert result.returncode == 0
     assert "# Agents Spec Context" in result.stdout
+    assert "Mode: skill-driven execution" in result.stdout
     assert "Current milestone:" in result.stdout
     assert "Active gates:" in result.stdout
+    assert "Iteration loop:" in result.stdout
     assert "# Research Summary Agent Prompt" in result.stdout
     assert "# Compliance Guard Checklist" in result.stdout
 
@@ -96,3 +98,15 @@ def test_cli_errors_on_missing_agents_spec(tmp_path: Path):
 
     assert result.returncode == 3
     assert "I/O Error" in result.stderr
+
+
+def test_cli_errors_on_invalid_agents_spec(tmp_path: Path):
+    input_file = tmp_path / "report.txt"
+    input_file.write_text("this is a short report", encoding="utf-8")
+    bad_spec = tmp_path / "bad_spec.md"
+    bad_spec.write_text("workflow:\n  iteration:\n    steps: [plan]\n", encoding="utf-8")
+
+    result = run_cli("--input", str(input_file), "--agents-spec", str(bad_spec))
+
+    assert result.returncode == 2
+    assert "invalid agents spec" in result.stderr
