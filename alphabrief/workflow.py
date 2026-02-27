@@ -69,9 +69,16 @@ def prepare_workflow(
         compression_rounds += 1
 
     # Last-resort guard for extremely long multi-chunk labels/metadata.
-    ellipsis = "\n\n[TRUNCATED TO MAX_CHARS]"
-    keep = max(0, max_chars - len(ellipsis))
-    merged = (merged[:keep] + ellipsis) if max_chars > 0 else ""
+    # Guarantee final length never exceeds max_chars, even when max_chars is
+    # smaller than the truncation marker itself.
+    marker = "[TRUNCATED TO MAX_CHARS]"
+    if max_chars <= 0:
+        merged = ""
+    elif max_chars <= len(marker):
+        merged = marker[:max_chars]
+    else:
+        keep = max_chars - len(marker)
+        merged = merged[:keep] + marker
     was_truncated = True
     return WorkflowResult(
         chunks=chunks,

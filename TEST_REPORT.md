@@ -3,10 +3,10 @@
 ## Latest Run
 - Command: `pytest -q`
 - Result: **PASS**
-- Summary: `22 passed in 0.93s`
+- Summary: `23 passed in 0.90s`
 
 ## Coverage Against M1 Acceptance Tests
-- T1: ✅ Covered by `test_load_agents_spec_extracts_milestones_and_gates` and `test_load_agents_spec_from_repo_skill_file`.
-- T2: ✅ Covered by `test_cli_errors_on_invalid_agents_spec`.
-- T3: ✅ Covered by `test_cli_outputs_sections` (`Mode: skill-driven execution`, `Iteration loop`).
+- T1: ✅ Covered by `test_prepare_workflow_truncation_respects_tiny_max_chars`.
+- T2: ✅ Covered by `test_prepare_workflow_applies_iterative_compression` and `test_prepare_workflow_last_resort_truncation`.
+- T3: ✅ README 已补充极小 `max_chars` 行为说明。
 - T4: ✅ `pytest -q` 全量通过。

@@ -1,11 +1,9 @@
 # Changelog
 
-## [0.1.10] - 2026-02-27
+## [0.1.11] - 2026-02-27
 ### Added
-- Added spec validation (`milestones`, `gates`, `iteration steps`, `repo_artifacts`) in `alphabrief.agents_spec.AgentsSpec.validate`.
-- Added CLI test coverage for invalid spec files that must fail fast.
+- Added edge-case test for tiny `max_chars` truncation behavior to guarantee strict length bounds.
 
 ### Changed
-- Strengthened skill execution behavior: `run_agents.py` now validates loaded `SKILL.md/agents.md` before processing input.
-- CLI context now includes explicit `Mode: skill-driven execution` and iteration loop reporting.
-- Updated README for skill-first loading and spec-validation failure semantics.
+- Fixed truncation fallback in workflow to ensure final merged output never exceeds `max_chars`, even when `max_chars` is smaller than truncation marker length.
+- Updated README with tiny-limit (`max_chars`) behavior and troubleshooting guidance.

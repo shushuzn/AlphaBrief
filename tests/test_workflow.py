@@ -72,6 +72,14 @@ def test_prepare_workflow_last_resort_truncation():
     assert "[TRUNCATED TO MAX_CHARS]" in result.merged_text
 
 
+def test_prepare_workflow_truncation_respects_tiny_max_chars():
+    text = " ".join([f"x{i}" for i in range(100)])
+    result = prepare_workflow(text, max_chars=5, chunk_size_words=1, summary_max_words=1)
+    assert len(result.merged_text) <= 5
+    assert result.was_truncated is True
+    assert result.merged_text == "[TRUN"
+
+
 def test_build_final_prompt_replaces_placeholder(tmp_path: Path):
     template = tmp_path / "template.txt"
     template.write_text("prefix\n{{REPORT_CONTENT}}\nsuffix", encoding="utf-8")

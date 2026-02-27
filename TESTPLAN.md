@@ -1,15 +1,15 @@
 # TESTPLAN (M1)
 
 ## Definition of Done
-- 程序默认读取 `SKILL.md` 并可回退 `agents.md`。
-- 规范文件缺失关键段落时，CLI 必须失败而非继续执行。
-- CLI 正常路径仍输出当前里程碑、gates、iteration loop。
-- 全量测试通过。
+- 最终合并输出在所有输入下都不超过 `max_chars`。
+- `max_chars` 小于截断标记长度时仍能稳定返回受限输出。
+- README 说明 tiny-limit 行为，便于用户预期与排障。
+- 全量自动化测试通过。
 
 ## Acceptance Tests
-- **T1**: `load_agents_spec(...).validate()` 对完整 spec 返回空问题列表。
-- **T2**: 无效 spec 触发 `invalid agents spec` 并返回 exit code `2`。
-- **T3**: CLI 输出包含 `Mode: skill-driven execution` 与 `Iteration loop`。
+- **T1**: `prepare_workflow` 在 `max_chars=5` 等极小值下仍满足长度约束。
+- **T2**: `prepare_workflow` 常规长文本压缩/截断路径保持正确。
+- **T3**: README 包含极小 `max_chars` 行为说明。
 - **T4**: `pytest -q` 全量通过。
 
 ## Command
