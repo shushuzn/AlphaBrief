@@ -2,23 +2,29 @@
 
 
 def split_words(text: str, chunk_size: int) -> list[str]:
-    """Split text into chunks by word count.
+    """Split text into chunks.
 
-    Args:
-        text: Source report text.
-        chunk_size: Maximum words per chunk. Must be positive.
-
-    Returns:
-        List of chunk strings.
+    Primary strategy is word-based splitting. If the input has no whitespace
+    boundaries (common in some OCR or CJK extracts), fall back to fixed-size
+    character chunks to avoid producing an oversized single block.
     """
     if chunk_size <= 0:
         raise ValueError("chunk_size must be positive")
 
-    words = text.split()
-    if not words:
+    normalized = text.strip()
+    if not normalized:
         return []
 
-    return [" ".join(words[i : i + chunk_size]) for i in range(0, len(words), chunk_size)]
+    words = normalized.split()
+    if len(words) > 1:
+        return [" ".join(words[i : i + chunk_size]) for i in range(0, len(words), chunk_size)]
+
+    # Fallback: no reliable whitespace tokenization, chunk by characters.
+    source = words[0]
+    if len(source) <= chunk_size:
+        return [source]
+
+    return [source[i : i + chunk_size] for i in range(0, len(source), chunk_size)]
 
 
 def summarize_chunk(chunk_text: str, summary_max_words: int) -> str:

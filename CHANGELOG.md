@@ -1,9 +1,9 @@
 # Changelog
 
-## [0.1.5] - 2026-02-27
+## [0.1.6] - 2026-02-27
 ### Added
-- Optimized `agents.md` with clearer executable protocol sections (iteration loop, required artifacts, hard rules, DoR/DoD).
+- Added no-whitespace fallback chunking: when tokenization cannot split by spaces, chunker now falls back to fixed-size character chunks.
+- Added tests for non-whitespace chunking and workflow integration.
 
 ### Changed
-- Updated roadmap execution status for M1 from `TODO` to `IN_PROGRESS` to reflect ongoing delivery.
-- Improved document structure/readability without changing milestone scope semantics.
+- Updated README tutorial troubleshooting to explain handling for OCR/CJK-style no-whitespace long text.

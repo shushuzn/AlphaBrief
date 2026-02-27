@@ -14,6 +14,11 @@ def test_split_words_respects_chunk_size():
     assert split_words(text, 2) == ["one two", "three four", "five"]
 
 
+def test_split_words_falls_back_to_char_chunks_when_no_whitespace():
+    text = "甲乙丙丁戊己"
+    assert split_words(text, 2) == ["甲乙", "丙丁", "戊己"]
+
+
 def test_summarize_chunk_truncates_and_marks_ellipsis():
     text = "one two three four"
     assert summarize_chunk(text, 2) == "one two ..."
@@ -34,6 +39,14 @@ def test_prepare_workflow_chunking_generates_summaries_when_over_threshold():
     assert len(result.chunk_summaries) == 2
     assert "[CHUNK SUMMARY 1]" in result.merged_text
     assert "[CHUNK SUMMARY 2]" in result.merged_text
+
+
+def test_prepare_workflow_chunking_handles_non_whitespace_text():
+    text = "甲乙丙丁戊己庚辛"
+    result = prepare_workflow(text, max_chars=2, chunk_size_words=3, summary_max_words=10)
+    assert len(result.chunks) == 3
+    assert result.chunks[0] == "甲乙丙"
+    assert "[CHUNK SUMMARY 1]" in result.merged_text
 
 
 def test_build_final_prompt_replaces_placeholder(tmp_path: Path):
