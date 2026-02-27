@@ -1,9 +1,9 @@
 # Changelog
 
-## [0.1.4] - 2026-02-27
+## [0.1.5] - 2026-02-27
 ### Added
-- Added a step-by-step Chinese tutorial in `README.md` with quick start, scenario-based parameter usage, output interpretation, and troubleshooting.
+- Optimized `agents.md` with clearer executable protocol sections (iteration loop, required artifacts, hard rules, DoR/DoD).
 
 ### Changed
-- Clarified operational guidance for exit code `2` (argument/input issues) and `3` (I/O issues) in the tutorial.
-- Kept implementation unchanged while improving developer/user onboarding for M1 workflow.
+- Updated roadmap execution status for M1 from `TODO` to `IN_PROGRESS` to reflect ongoing delivery.
+- Improved document structure/readability without changing milestone scope semantics.
